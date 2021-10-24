@@ -45,7 +45,7 @@ module Data.Bytes.Parser.Internal
 import Prelude hiding (length,any,fail,takeWhile)
 
 import Control.Applicative (Alternative)
-import Control.Monad.ST.Run (runByteArrayST)
+import Control.Monad.ST (runST)
 import Data.Primitive (ByteArray(ByteArray))
 import Data.Bytes.Types (Bytes(..))
 import Data.Kind (Type)
@@ -165,7 +165,7 @@ upcastUnitSuccess :: (# Int#, Int# #) -> Result# e ()
 upcastUnitSuccess (# b, c #) = (# | (# (), b, c #) #)
 
 swapArray16 :: Bytes -> ByteArray
-swapArray16 (Bytes{array,offset,length}) = runByteArrayST $ do
+swapArray16 (Bytes{array,offset,length}) = runST $ do
   dst <- PM.newByteArray length
   let go !ixSrc !ixDst !len = if len > 0
         then do
@@ -179,7 +179,7 @@ swapArray16 (Bytes{array,offset,length}) = runByteArrayST $ do
   PM.unsafeFreezeByteArray dst
 
 swapArray32 :: Bytes -> ByteArray
-swapArray32 (Bytes{array,offset,length}) = runByteArrayST $ do
+swapArray32 (Bytes{array,offset,length}) = runST $ do
   dst <- PM.newByteArray length
   let go !ixSrc !ixDst !len = if len > 0
         then do
@@ -197,7 +197,7 @@ swapArray32 (Bytes{array,offset,length}) = runByteArrayST $ do
   PM.unsafeFreezeByteArray dst
 
 swapArray64 :: Bytes -> ByteArray
-swapArray64 (Bytes{array,offset,length}) = runByteArrayST $ do
+swapArray64 (Bytes{array,offset,length}) = runST $ do
   dst <- PM.newByteArray length
   let go !ixSrc !ixDst !len = if len > 0
         then do
@@ -223,7 +223,7 @@ swapArray64 (Bytes{array,offset,length}) = runByteArrayST $ do
   PM.unsafeFreezeByteArray dst
 
 swapArray128 :: Bytes -> ByteArray
-swapArray128 (Bytes{array,offset,length}) = runByteArrayST $ do
+swapArray128 (Bytes{array,offset,length}) = runST $ do
   dst <- PM.newByteArray length
   let go !ixSrc !ixDst !len = if len > 0
         then do
@@ -265,7 +265,7 @@ swapArray128 (Bytes{array,offset,length}) = runByteArrayST $ do
   PM.unsafeFreezeByteArray dst
 
 swapArray256 :: Bytes -> ByteArray
-swapArray256 (Bytes{array,offset,length}) = runByteArrayST $ do
+swapArray256 (Bytes{array,offset,length}) = runST $ do
   dst <- PM.newByteArray length
   let go !ixSrc !ixDst !len = if len > 0
         then do

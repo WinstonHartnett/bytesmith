@@ -61,7 +61,7 @@ import Data.Bytes.Parser.Internal (Result(..),indexLatinCharArray,upcastUnitSucc
 import Data.Char (ord)
 import Data.Word (Word8)
 import Data.Text.Short (ShortText)
-import Control.Monad.ST.Run (runByteArrayST)
+import Control.Monad.ST (runST)
 import GHC.Exts (Int(I#),Char(C#),Int#,Char#,(-#),(+#),(<#),ord#,indexCharArray#,chr#)
 import GHC.Exts (gtChar#)
 
@@ -112,7 +112,7 @@ takeShortWhile p = do
   end <- Unsafe.cursor
   src <- Unsafe.expose
   let len = end - start
-      !r = runByteArrayST $ do
+      !r = runST $ do
         marr <- PM.newByteArray len
         PM.copyByteArray marr 0 src start len
         PM.unsafeFreezeByteArray marr
@@ -132,7 +132,7 @@ shortTrailedBy e !c = do
   end <- Unsafe.cursor
   src <- Unsafe.expose
   let len = end - start - 1
-      !r = runByteArrayST $ do
+      !r = runST $ do
         marr <- PM.newByteArray len
         PM.copyByteArray marr 0 src start len
         PM.unsafeFreezeByteArray marr
